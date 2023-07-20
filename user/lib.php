@@ -206,6 +206,15 @@ function user_update_user($user, $updatepassword = true, $triggerevent = true) {
         }
     }
 
+    // Allow plugins to use this user object before update.
+    if ($pluginsfunction = get_plugins_with_function('pre_user_update')) {
+        foreach ($pluginsfunction as $plugintype => $plugins) {
+            foreach ($plugins as $pluginfunction) {
+                $pluginfunction($user);
+            }
+        }
+    }
+
     $DB->update_record('user', $user);
 
     if ($updatepassword) {
