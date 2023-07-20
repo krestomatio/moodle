@@ -114,6 +114,15 @@ function user_create_user($user, $updatepassword = true, $triggerevent = true) {
         }
     }
 
+    // Allow plugins to use this user object before creation.
+    if ($pluginsfunction = get_plugins_with_function('pre_user_create')) {
+        foreach ($pluginsfunction as $plugintype => $plugins) {
+            foreach ($plugins as $pluginfunction) {
+                $pluginfunction($user);
+            }
+        }
+    }
+
     // Insert the user into the database.
     $newuserid = $DB->insert_record('user', $user);
 
