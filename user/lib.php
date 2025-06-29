@@ -118,6 +118,12 @@ function user_create_user($user, $updatepassword = true, $triggerevent = true) {
         }
     }
 
+    // Dispatch the hook for pre user create actions.
+    $hook = new \core_user\hook\before_user_created(
+        user: $user,
+    );
+    \core\di::get(\core\hook\manager::class)->dispatch($hook);
+
     // Insert the user into the database.
     $newuserid = $DB->insert_record('user', $user);
 
